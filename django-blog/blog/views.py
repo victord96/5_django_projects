@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class IndexView(generic.ListView):
-    template_name = 'posts/index.html'
+    template_name = 'blog/index.html'
     context_object_name = 'latest_post_list'
 
 

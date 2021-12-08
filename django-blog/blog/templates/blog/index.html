@@ -1,6 +1,11 @@
-{% load static %}
+{% extends "blog/base_generic.html" %} 
 
-<link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
+{% block content %}
+
+
+<div class="sign-in">
+    <a href="{% url 'login' %}">sign up/sign in</a>
+</div>
 
 {% if latest_post_list %}
     <ul>
@@ -11,3 +16,6 @@
 {% else %}
     <p>No posts are available.</p>
 {% endif %}
+
+
+{% endblock %}

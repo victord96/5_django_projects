@@ -1,20 +1,43 @@
-{% extends "blog/base_generic.html" %} 
+{% extends "blog/base.html" %}
+
+{% block header %}
+
+<div class="header">
+
+    {% if user.is_authenticated %}
+
+    <h1> Welcome back, {{ user.get_username }} </h1>
+
+    <div class='nav'>
+        <a href="/accounts/logout">logout</a>
+    </div>
+
+    {% else %}
+
+    <h1> Welcome to my blog </h1>
+
+    <div class='nav'>
+        <a href="/accounts/login">sign up/sign in</a>
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}
 
 {% block content %}
 
-
-<div class="sign-in">
-    <a href="{% url 'login' %}">sign up/sign in</a>
-</div>
-
 {% if latest_post_list %}
-    <ul>
+<ul>
     {% for post in latest_post_list %}
         <li><a href="{% url 'blog:detail' post.id %}">{{ post.title }}</a></li>
     {% endfor %}
-    </ul>
+    <li><a href="{% url 'blog:new_post' %}">Create new post</a></li>
+</ul>
 {% else %}
-    <p>No posts are available.</p>
+<p> No posts are available. <a href="{% url 'blog:new_post' %}">Create one?</a></p>
 {% endif %}
 
 

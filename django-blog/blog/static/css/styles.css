@@ -1,3 +1,4 @@
-.sign-in {
-    text-align: right;
+.header {
+    display:flex;
+    justify-content: space-between;
 }

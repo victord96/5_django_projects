@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.views import generic
 from django.http import HttpResponseRedirect, request
 from django.views.generic.base import TemplateView, View
+from django.urls import reverse_lazy
 
 from .models import Post
 
@@ -24,13 +25,17 @@ class IndexView(View):
 
 class CreatePost(generic.CreateView):
 
-    template_name = 'blog/new_post.html'
     model = Post
-    fields = ['title', 'content', 'pub_date']
+    fields = ['title', 'content']
 
-    def post (self, request):
-        
-        return redirect('/blog')
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class DeletePost(generic.DeleteView):
+    model = Post
+    success_url = reverse_lazy('blog:index')
 
 
 class Details(generic.DetailView):
@@ -38,9 +43,7 @@ class Details(generic.DetailView):
     model = Post
     template_name = 'blog/detail.html'
 
-    def post(self):
     
-        return Post.objects.all    
 
 
 def Register(request):

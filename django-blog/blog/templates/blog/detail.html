@@ -1,7 +1,16 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
-<h1>{{ post.title }}</h1>
+<div class="header">
+    <h1>{{ post.title }}</h1>
+    <div class='nav'>
+        <p>Published at {{ post.pub_date }} by {{ post.owner }}</p>
+    </div>
+</div>
 <p>{{ post.content }}</p>
-<a href= "{% url 'blog:index' %}">Return to home</a>
+<a href="{% url 'blog:index' %}">Return to home</a>
+
+{% if user.get_username == post.owner|stringformat:"s" %}
+    <a href="{% url 'blog:delete_post' post.id %}">Delete post</a>
+{% endif %}
 {% endblock %}

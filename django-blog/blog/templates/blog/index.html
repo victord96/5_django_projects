@@ -32,12 +32,18 @@
 {% if latest_post_list %}
 <ul>
     {% for post in latest_post_list %}
-        <li><a href="{% url 'blog:detail' post.id %}">{{ post.title }}</a></li>
+        <li><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></li>
     {% endfor %}
+    {% if user.is_authenticated %}
     <li><a href="{% url 'blog:new_post' %}">Create new post</a></li>
+    {% endif %}
 </ul>
 {% else %}
-<p> No posts are available. <a href="{% url 'blog:new_post' %}">Create one?</a></p>
+    {% if user.is_authenticated %}
+        <p> No posts are available. <a href="{% url 'blog:new_post' %}">Create one?</a></p>
+    {% else %}    
+        <p> No posts are available.</p>
+    {% endif %}
 {% endif %}
 
 

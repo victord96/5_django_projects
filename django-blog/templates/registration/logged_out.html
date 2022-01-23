@@ -1,6 +1,10 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
 <p>Logged out!</p>
 
 <a href="{% url 'login'%}">Click here to login again.</a>
 <div class = "nav">
     <a href= "{% url 'blog:index' %}"> Click here to go to the menu</a>
 </div>
+{% endblock %}

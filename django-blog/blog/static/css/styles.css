@@ -2,3 +2,5 @@
     display:flex;
     justify-content: space-between;
 }
+
+.space { margin-top: 30px; }

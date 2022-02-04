@@ -1,16 +1,54 @@
 {% extends "blog/base.html" %}
+{% load blog_tags %}
 
-{% block content %}
+{% block header %}
 <div class="header">
     <h1>{{ post.title }}</h1>
     <div class='nav'>
-        <p>Published at {{ post.pub_date }} by {{ post.owner }}</p>
+        <p>Published at {{ post.get_pub_date }} by {{ post.owner }}</p>
     </div>
 </div>
 <p>{{ post.content }}</p>
 <a href="{% url 'blog:index' %}">Return to home</a>
 
 {% if user.get_username == post.owner|stringformat:"s" %}
+    <a href="{% url 'blog:update_post' post.id %}">Update post</a>
     <a href="{% url 'blog:delete_post' post.id %}">Delete post</a>
 {% endif %}
+
+<div class="space"></div>
+{% for comment in comment_list %}
+    {{comment.get_body}}
+    <br>
+    {{comment.get_details }} 
+
+    {% if comment.post.owner|stringformat:"s" == user.get_username %}
+        <a href= "{% url 'blog:update_comment' post.id comment.id %}">Update </a>&nbsp
+        <a href= "{% url 'blog:delete_comment' post.id comment.id %}">Delete </a>
+    {% endif %}    
+    <br>
+{% endfor %}
+<div class="space"></div>
+<a href="{% url 'blog:new_comment' post.id %}">Comment </a>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
 {% endblock %}

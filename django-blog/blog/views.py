@@ -1,15 +1,14 @@
-from django import views
-from django.http.response import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, views
+from urllib import request
+from webbrowser import get
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.views import generic
-from django.http import HttpResponseRedirect, request
-from django.views.generic.base import TemplateView, View
-from django.urls import reverse_lazy
+from django.template import context
+from django.views.generic import *
+from django.views.generic.base import View
+from django.urls import reverse_lazy, resolve
 
-from .models import Post
+from .models import Post, Comment
 
 
 class IndexView(View):
@@ -23,7 +22,7 @@ class IndexView(View):
         return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list})
 
 
-class CreatePost(generic.CreateView):
+class CreatePost(CreateView):
 
     model = Post
     fields = ['title', 'content']
@@ -33,17 +32,63 @@ class CreatePost(generic.CreateView):
         return super().form_valid(form)
 
 
-class DeletePost(generic.DeleteView):
+class UpdatePost(UpdateView):  
     model = Post
-    success_url = reverse_lazy('blog:index')
+    fields = ['title', 'content']
+    pk_url_kwarg = 'post_id'
 
 
-class Details(generic.DetailView):
+class DeletePost(DeleteView):
 
     model = Post
+    pk_url_kwarg = 'post_id'
+    success_url = reverse_lazy('blog:index')        
+
+
+class CreateComment(CreateView):
+
+    model = Comment
+    fields = ['body']
+
+    def form_valid(self, form):
+        form.instance.name = self.request.user
+        post_owner = Post.objects.filter(id = self.kwargs['post_id'])
+        form.instance.post = post_owner[0]
+        return super().form_valid(form)
+
+
+class UpdateComment(UpdateView):  
+    model = Comment
+    fields = ['body']
+    pk_url_kwarg = 'comment_id'
+
+
+class DeleteComment(DeleteView):
+
+    model = Comment 
+    pk_url_kwarg = 'comment_id'
+
+    def get_success_url(self):
+        postid = self.kwargs['post_id']
+        return reverse_lazy('blog:post_details', kwargs={'post_id': postid})
+
+
+# With this view, we can manage post details and comments
+class DetailListView(ListView):
+
+    paginate_by = 10
     template_name = 'blog/detail.html'
+    context_object_name = 'comment_list'
+
+    def get_queryset(self):
+        self.post = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return Comment.objects.filter(post = self.post)
 
     
+    def get_context_data(self, **kwargs ):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.post
+        return context  
 
 
 def Register(request):

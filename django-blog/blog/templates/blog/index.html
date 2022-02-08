@@ -1,33 +1,22 @@
 {% extends "blog/base.html" %}
 
-{% block header %}
+{% block content %}
 
-<div class="header">
-
+<div class="index">
+    
+    <br>
     {% if user.is_authenticated %}
 
     <h1> Welcome back, {{ user.get_username }} </h1>
-
-    <div class='nav'>
-        <a href="/accounts/logout">logout</a>
-    </div>
 
     {% else %}
 
     <h1> Welcome to my blog </h1>
 
-    <div class='nav'>
-        <a href="/accounts/login">sign up/sign in</a>
-    </div>
-
     {% endif %}
 
 
 </div>
-
-{% endblock %}
-
-{% block content %}
 
 {% if latest_post_list %}
 <ul>

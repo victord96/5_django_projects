@@ -13,7 +13,7 @@
 
     {% if user.get_username == post.owner|stringformat:"s" %}
         <div class="space">
-            <nav><a href="{% url 'blog:update_post' post.id %}">Update post</a>
+            <nav><a href="{% url 'blog:update_post' post.id %}">Edit post</a>
             <a href="{% url 'blog:delete_post' post.id %}">Delete post</a></nav>
         </div>    
     {% endif %}
@@ -24,22 +24,22 @@
 </div>
 <hr><br>
 
-<p>{{ post.content }}</p>
+<b>{{ post.content }}</b>
 
 <div class="space"></div>
 {% for comment in comment_list %}
     {{comment.get_body}}
     <br>
     {{comment.get_details }} 
-
-    {% if comment.post.owner|stringformat:"s" == user.get_username %}
-        <br>
-        <a href= "{% url 'blog:update_comment' post.id comment.id %}">Update </a>&nbsp
-        <a href= "{% url 'blog:delete_comment' post.id comment.id %}">Delete </a>
+    <br>
+    {% if comment.name|stringformat:"s" == user.get_username %}
+        <a href= "{% url 'blog:update_comment' post.id comment.id %}">Edit </a>&nbsp
+        <a href= "{% url 'blog:delete_comment' post.id comment.id %}">Delete </a>   
     {% endif %}    
     <br>
 {% endfor %}
 
+{% if comment_list %}
 <br>
 <div class="pagination">
     <span class="step-links">
@@ -48,9 +48,11 @@
             <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
+        
         <span class="current">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
+        
 
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}">next</a>
@@ -58,6 +60,10 @@
         {% endif %}
     </span>
 </div>
+
+{% else %}
+This post doesn´t have comments. 
+{% endif %}
 
 {% if user.get_username %}
 <a href="{% url 'blog:new_comment' post.id %}"> Comment Post </a>

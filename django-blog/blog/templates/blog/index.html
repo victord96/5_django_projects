@@ -21,7 +21,12 @@
 {% if latest_post_list %}
 <ul>
     {% for post in latest_post_list %}
-        <li><a href="{% url 'blog:post_details' post.id %}">{{ post.title }}</a></li>
+        <li><a href="{% url 'blog:post_details' post.id %}">{{ post.title }}</a>
+             - {{post.owner}}
+             {% if user.get_username == post.owner|stringformat:"s" %}
+             <sub><a href="{% url 'blog:update_post' post.id %}"> (edit)</a></sub>
+             <sub><a href="{% url 'blog:delete_post' post.id %}"> (delete)</a></sub></li>
+             {% endif %}
     {% endfor %}
     {% if user.is_authenticated %}
     <li><a href="{% url 'blog:new_post' %}">Create new post</a></li>

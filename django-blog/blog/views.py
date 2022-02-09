@@ -9,6 +9,7 @@ from django.views.generic.base import View
 from django.urls import reverse_lazy, resolve
 
 from .models import Post, Comment
+from .forms import CommentForm, PostForm
 
 
 class IndexView(View):
@@ -25,7 +26,7 @@ class IndexView(View):
 class CreatePost(CreateView):
 
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -34,7 +35,7 @@ class CreatePost(CreateView):
 
 class UpdatePost(UpdateView):  
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm
     pk_url_kwarg = 'post_id'
 
 
@@ -48,7 +49,7 @@ class DeletePost(DeleteView):
 class CreateComment(CreateView):
 
     model = Comment
-    fields = ['body']
+    form_class = CommentForm
 
     def form_valid(self, form):
         form.instance.name = self.request.user
@@ -59,7 +60,7 @@ class CreateComment(CreateView):
 
 class UpdateComment(UpdateView):  
     model = Comment
-    fields = ['body']
+    form_class = CommentForm
     pk_url_kwarg = 'comment_id'
 
 
@@ -88,6 +89,7 @@ class DetailListView(ListView):
     def get_context_data(self, **kwargs ):
         context = super().get_context_data(**kwargs)
         context['post'] = self.post
+        context['post_path'] = self.request.path
         return context  
 
 

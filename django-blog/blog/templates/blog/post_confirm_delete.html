@@ -1,12 +1,11 @@
 {% extends "blog/base.html" %} 
 
 {% block content %}
-
+<br>
 <form method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
     {{ form }}
-    <input type="submit" value="Confirm">
-    <input type="button" onclick="history.back();" value="Back">
+    <input class="btn btn-success" type="submit" value="Confirm">
+    <input class="btn btn-success" type="button" onclick="history.back();" value="Back">
 </form>
-
 {% endblock %}

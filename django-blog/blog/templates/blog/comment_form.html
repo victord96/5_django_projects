@@ -1,10 +1,10 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
-
-<form method="POST">{% csrf_token %}
+<br>
+<form method="post">{% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Save"> <input type="button" onclick="history.back();" value="Back">
+    <input class="btn btn-success" type="submit" value="Save">
+    <input class="btn btn-success" type="button" onclick="history.back();" value="Back">
 </form>
-
 {% endblock %}

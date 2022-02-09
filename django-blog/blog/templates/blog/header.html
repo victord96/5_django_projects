@@ -20,15 +20,35 @@
 
           {% if user.is_authenticated %}
 
-          <div class='nav-item'>
-            <a class="nav-link" href="{% url 'blog:new_post' %}">Add Post</a>
-          </div>
+            {% if request.path == "/blog/" %}
 
-          <div class='nav-item'>
-            <a class="nav-link" href="/accounts/logout">logout</a>
-          </div>
+              <div class='nav-item'>
+                <a class="nav-link" href="{% url 'blog:new_post' %}">Add Post</a>
+              </div>
+
+            {# post_path: Context of DetailListView that contains relative post path #} 
+            {% elif post_path and user.get_username == post.owner|stringformat:"s" %}
+
+              <div class='nav-item'>
+                <a class="nav-link" href="{% url 'blog:update_post' post.id %}">Edit Post</a>
+              </div>
+
+              <div class='nav-item'>
+                <a class="nav-link" href="{% url 'blog:delete_post' post.id %}">Delete Post</a>
+              </div>
+
+            {% endif %}
+
+            <div class='nav-item'>
+              <a class="nav-link" href="/accounts/logout">Logout</a>
+            </div>
 
           {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/register/">Register</a>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="/accounts/login">Login</a>
           </li>

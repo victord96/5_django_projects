@@ -25,9 +25,9 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     body = models.TextField()
-    pub_date = models.DateTimeField(auto_now=True)
+    name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    pub_date = models.DateTimeField(auto_now_add=True, )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def get_pub_date(self):

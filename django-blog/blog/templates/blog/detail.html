@@ -24,7 +24,11 @@
 </div>
 <hr><br>
 
-<b>{{ post.content }}</b>
+{% if post.header_image %}
+    <img src="{{ post.header_image.url}}">
+{% endif %}
+
+{{ post.content|safe }}
 
 <div class="space"></div>
 {% for comment in comment_list %}

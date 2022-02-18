@@ -2,7 +2,8 @@
 
 {% block content %}
 <br>
-<form method="post">{% csrf_token %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.media }} 
     {{ form.as_p }}  
     <input class="btn btn-success" type="submit" value="Save">
     <input class="btn btn-success" type="button" onclick="history.back();" value="Back">

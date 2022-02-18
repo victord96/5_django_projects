@@ -1,26 +1,52 @@
+from unicodedata import category
 from urllib import request
 from webbrowser import get
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.template import context
 from django.views.generic import *
 from django.views.generic.base import View
 from django.urls import reverse_lazy, resolve
 
-from .models import Post, Comment
+from .models import Category, Post, Comment
 from .forms import CommentForm, PostForm
 
 
 class IndexView(View):
 
-
     def get (self, request):
         """Return all published posts.(not including those set to be
     published in the future) and user info"""
 
-        latest_post_list = Post.objects.order_by('-pub_date')[:5]
-        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list})
+        latest_post_list = Post.objects.order_by('-pub_date')
+        categories = Category.objects.all()
+        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'categories' : categories})
+
+
+class SearchIndexView(View):
+
+    def get(self, request, search):
+
+        if Post.objects.filter(category__name=search):
+            latest_post_list = Post.objects.filter(category__name=search).order_by('-pub_date')
+        elif Post.objects.filter(owner__username=search):
+            latest_post_list = Post.objects.filter(owner__username=search).order_by('-pub_date')
+        else:
+            latest_post_list = [post for post in Post.objects.all() if post.get_pub_date_no_hours() == search]
+        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'search' : search})
+
+class CreateCategory(CreateView):
+
+    model = Category
+    fields= '__all__'
+
+    def get_context_data(self, **kwargs ):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['options'] = self.kwargs['option']
+        return context  
 
 
 class CreatePost(CreateView):
@@ -107,3 +133,18 @@ def Register(request):
     else:
         form = UserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
+
+
+class UpdateProfile(UpdateView):
+
+    model = User
+    template_name = 'registration/edit_profile.html'
+    fields = ('username', 'first_name', "last_name", "email", )
+
+    
+    def get_object(self):
+        return self.request.user
+
+
+    def get_success_url(self):
+        return reverse_lazy('blog:index')

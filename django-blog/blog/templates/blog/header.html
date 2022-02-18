@@ -18,12 +18,31 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+          {% if "search" in request.path or request.path == "/blog/" %}
+          
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{% url 'blog:new_category' 'n' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Categories
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% for category in categories %}
+                    <li><a class="dropdown-item" href="{% url 'blog:search' category %}">{{category}}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+
+          {% endif %}
+
           {% if user.is_authenticated %}
 
             {% if request.path == "/blog/" %}
 
               <div class='nav-item'>
                 <a class="nav-link" href="{% url 'blog:new_post' %}">Add Post</a>
+              </div>
+
+              <div class='nav-item'>
+                <a class="nav-link" href="{% url 'blog:new_category' 'y' %}">Add Category</a>
               </div>
 
             {# post_path: Context of DetailListView that contains relative post path #} 
@@ -39,9 +58,20 @@
 
             {% endif %}
 
-            <div class='nav-item'>
-              <a class="nav-link" href="/accounts/logout">Logout</a>
-            </div>
+            {% if request.path == "/blog/" %}
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{% url 'blog:new_category' 'n' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Profile
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'blog:update_profile' %}">Edit</a></li>
+                  <li><a class="dropdown-item" href="{% url 'password_reset' %}">Change Password</a></li>
+                  <li><a class="dropdown-item" href="/accounts/logout">Logout</a></li>
+                </ul>
+              </li>
+
+            {% endif %}
 
           {% else %}
 

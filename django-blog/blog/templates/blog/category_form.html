@@ -1,0 +1,29 @@
+{% extends "blog/base.html" %} 
+
+{% block content %}
+<br>
+
+<h2>Existing categories:</h2>
+
+{% for category in categories %}
+    <a class="dropdown-item" href="{% url 'blog:search' category.name %}">
+        {{category.name}}</a>
+{% endfor %}    
+
+{% for option in options %}
+    {% if option == 'y' %}
+        <br>
+        <form method="post">{% csrf_token %}
+            <p><label for="id_category">Name:</label>
+                <input type="text" name="name" id="id_category" required></p>
+            <input class="btn btn-success" type="submit" value="Add">
+            <input class="btn btn-success" type="button" onclick="history.back();" value="Back">
+        </form>
+    {% else %}
+        <br>
+        <input class="btn btn-success" type="button" onclick="history.back();" value="Back">
+    {% endif %}
+        
+{% endfor %}
+
+{% endblock %}

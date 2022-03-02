@@ -35,8 +35,6 @@
 
           {% if user.is_authenticated %}
 
-            {% if request.path == "/blog/" %}
-
               <div class='nav-item'>
                 <a class="nav-link" href="{% url 'blog:new_post' %}">Add Post</a>
               </div>
@@ -46,7 +44,7 @@
               </div>
 
             {# post_path: Context of DetailListView that contains relative post path #} 
-            {% elif post_path and user.get_username == post.owner|stringformat:"s" %}
+            {% if post_path and user.get_username == post.owner|stringformat:"s" %}
 
               <div class='nav-item'>
                 <a class="nav-link" href="{% url 'blog:update_post' post.id %}">Edit Post</a>
@@ -58,20 +56,15 @@
 
             {% endif %}
 
-            {% if request.path == "/blog/" %}
-
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="{% url 'blog:new_category' 'n' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Profile
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="{% url 'blog:update_profile' %}">Edit</a></li>
-                  <li><a class="dropdown-item" href="{% url 'password_reset' %}">Change Password</a></li>
                   <li><a class="dropdown-item" href="/accounts/logout">Logout</a></li>
                 </ul>
               </li>
-
-            {% endif %}
 
           {% else %}
 

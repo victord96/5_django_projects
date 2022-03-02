@@ -1,17 +1,18 @@
-from unicodedata import category
-from urllib import request
-from webbrowser import get
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.template import context
 from django.views.generic import *
 from django.views.generic.base import View
 from django.urls import reverse_lazy, resolve
 
-from .models import Category, Post, Comment
-from .forms import CommentForm, PostForm
+from .models import Category, Post, Comment, Profile
+from .forms import CommentForm, PostForm, ProfileForm, UserForm
+
+from slugify import slugify
 
 
 class IndexView(View):
@@ -19,7 +20,12 @@ class IndexView(View):
     def get (self, request):
         """Return all published posts.(not including those set to be
     published in the future) and user info"""
-
+        # if request.user.is_authenticated:
+        #     latest_post_list = Post.objects.order_by('-pub_date')
+        #     categories = Category.objects.all()
+        #     profile = Profile.objects.filter(user=request.user).first()
+        #     return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'categories' : categories, 'profile' : profile})
+        # else:
         latest_post_list = Post.objects.order_by('-pub_date')
         categories = Category.objects.all()
         return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'categories' : categories})
@@ -111,7 +117,6 @@ class DetailListView(ListView):
         self.post = get_object_or_404(Post, id=self.kwargs['post_id'])
         return Comment.objects.filter(post = self.post)
 
-    
     def get_context_data(self, **kwargs ):
         context = super().get_context_data(**kwargs)
         context['post'] = self.post
@@ -126,6 +131,7 @@ def Register(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
+            Profile.objects.create(user=User.objects.filter(username=username).first())
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
@@ -135,16 +141,32 @@ def Register(request):
     return render(request, 'blog/register.html', {'form': form})
 
 
-class UpdateProfile(UpdateView):
+def edit_profile(request):
+    if request.method == 'POST':
+        userform = UserForm(request.POST, instance=request.user)
+        profileform = ProfileForm(request.POST, instance=request.user.profile)
+        if profileform.is_valid:
+            userform.save()
+            profileform.save()
+            return redirect('blog:index')
+    else:
+        userform = UserForm(instance=request.user)
+        profileform = ProfileForm(instance=request.user.profile)
+        ctx = {
+        'userform': userform,
+        'profileform': profileform,
+        }
+        return render(request, 'blog/edit_profile.html', ctx)
 
-    model = User
-    template_name = 'registration/edit_profile.html'
-    fields = ('username', 'first_name', "last_name", "email", )
+# class UpdateProfile(LoginRequiredMixin, UpdateView):
+#     model = Profile
+#     #Tenemos que rellenar el formulario de perfil de alguna forma
+#     form_class = ProfileForm
+#     template_name = 'registration/edit_profile.html'
+#     success_url = reverse_lazy('blog:index')
+#     slug_url_kwarg = 'profile_name'
 
-    
-    def get_object(self):
-        return self.request.user
-
-
-    def get_success_url(self):
-        return reverse_lazy('blog:index')
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['user'] = UserForm(user=self.kwargs['profile_name'])
+#         return context

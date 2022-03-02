@@ -1,6 +1,8 @@
+from tkinter import CASCADE
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from ckeditor.fields import RichTextField
 
@@ -70,3 +72,9 @@ class Comment(models.Model):
 
     def get_details(self):
         return f"Commented by {self.name} on {self.get_pub_date()}"
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    bio = models.TextField(blank = True)
+    profile_pic = models.ImageField(null=True, blank=True, upload_to="images/")

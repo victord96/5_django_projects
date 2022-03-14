@@ -158,15 +158,4 @@ def edit_profile(request):
         }
         return render(request, 'blog/edit_profile.html', ctx)
 
-# class UpdateProfile(LoginRequiredMixin, UpdateView):
-#     model = Profile
-#     #Tenemos que rellenar el formulario de perfil de alguna forma
-#     form_class = ProfileForm
-#     template_name = 'registration/edit_profile.html'
-#     success_url = reverse_lazy('blog:index')
-#     slug_url_kwarg = 'profile_name'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['user'] = UserForm(user=self.kwargs['profile_name'])
-#         return context
+#class ShowProfilePageView():

@@ -7,8 +7,15 @@
 
 {% load static %}
 
+<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
 <link rel='stylesheet' href="{% static 'css/styles.css' %}">
-<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
+{% url 'login' as the_url %}
+<!--header of login-->
+{% if request.path == the_url %}
+  <link rel='stylesheet' href="{% static 'css/signin.css' %}">
+{% else %}  
+<!-- Header bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/blog/">My Blog</a>
@@ -18,7 +25,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-          {% if "search" in request.path or request.path == "/blog/" %}
+          {% if user.is_authenticated %}
           
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="{% url 'blog:new_category' 'n' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,10 +37,6 @@
                   {% endfor %}
                 </ul>
               </li>
-
-          {% endif %}
-
-          {% if user.is_authenticated %}
 
               <div class='nav-item'>
                 <a class="nav-link" href="{% url 'blog:new_post' %}">Add Post</a>
@@ -55,28 +58,31 @@
               </div>
 
             {% endif %}
-
+            <span class="navbar-text">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="{% url 'blog:new_category' 'n' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Profile
+                  {{user.username}}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'blog:update_profile' %}">Edit</a></li>
-                  <li><a class="dropdown-item" href="/accounts/logout">Logout</a></li>
+                  <li><a class="dropdown-item" href="{% url 'blog:update_profile' %}">Edit Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
+            </span>  
 
           {% else %}
 
           <li class="nav-item">
-            <a class="nav-link" href="/blog/register/">Register</a>
+            <a class="nav-link" href="{% url 'blog:register' %}">Register</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/accounts/login">Login</a>
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
           {% endif %}
         </ul>
       </div>
     </div>
 </nav>
+{% endif %}

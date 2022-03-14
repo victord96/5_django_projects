@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'blog',
 
     'crispy_forms',
+    'crispy_bootstrap5',
     'ckeditor',
 ]
 
@@ -132,7 +133,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'static',
 )
 
 # Default primary key field type
@@ -141,7 +142,10 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_URL = '/blog/'
 LOGIN_REDIRECT_URL = '/blog/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

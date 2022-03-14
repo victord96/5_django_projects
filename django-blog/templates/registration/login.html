@@ -1,4 +1,4 @@
-{% extends "blog/base.html" %}{% load crispy_forms_tags %}
+{% extends "blog/base.html" %}{% load crispy_forms_tags %}{% load static %}
 
 {% block content %}
 
@@ -7,13 +7,10 @@
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
-
-<form method="post" action="{% url 'login' %}"> {% csrf_token %}
-  {{ form|crispy }}  
-  <br>  
-  <input class="btn btn-success" type="submit" value="login">
-  <input type="hidden" name="next" value="{{ next }}">
-</form>
+<img class="mb-4" src="{% static 'images/logo.jpg' %}" >
+<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+{% csrf_token %}
+{% crispy form %}  
 
 {# Assumes you set up the password_reset view in your URLconf #}
 <br>

@@ -19,9 +19,17 @@ class CustomLoginView(LoginView):
     form_class = LoginForm
 
     def form_valid(self, form):
-        """Security check complete. Log the user in."""
+        super().form_valid(form)
 
-        # changed default login
+        """Security check complete. Log the user in."""
+        #changed default login
         custom_login(self.request, form.get_user())
+
+        #get remember me data from cleaned_data of form
+        remember_me = form.cleaned_data['remember_me']  
+
+        if not remember_me:
+            self.request.session.set_expiry(0)  # if remember me is 
+            self.request.session.modified = True
 
         return HttpResponseRedirect(self.get_success_url()) 

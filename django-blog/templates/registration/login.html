@@ -1,19 +1,5 @@
-{% extends "blog/base.html" %}{% load crispy_forms_tags %}{% load static %}
+{% extends "blog/base.html" %}{% load crispy_forms_tags %}
 
 {% block content %}
-
-<br>
-
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-<img class="mb-4" src="{% static 'images/logo.jpg' %}" >
-<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-{% csrf_token %}
-{% crispy form %}  
-
-{# Assumes you set up the password_reset view in your URLconf #}
-<br>
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
+    {% crispy form %}  
 {% endblock %}

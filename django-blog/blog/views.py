@@ -7,7 +7,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.template import context
 from django.views.generic import *
 from django.views.generic.base import View
-from django.urls import reverse_lazy, resolve
+from django.urls import path, reverse_lazy, resolve
 
 from .models import Category, Post, Comment, Profile
 from .forms import CommentForm, PostForm, ProfileForm, UserForm
@@ -28,7 +28,8 @@ class IndexView(View):
         # else:
         latest_post_list = Post.objects.order_by('-pub_date')
         categories = Category.objects.all()
-        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'categories' : categories})
+        indexpath = self.request.path
+        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'categories' : categories, 'path' : indexpath})
 
 
 class SearchIndexView(View):
@@ -120,7 +121,6 @@ class DetailListView(ListView):
     def get_context_data(self, **kwargs ):
         context = super().get_context_data(**kwargs)
         context['post'] = self.post
-        context['post_path'] = self.request.path
         return context  
 
 

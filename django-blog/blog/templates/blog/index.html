@@ -2,53 +2,59 @@
 
 {% block content %}
 
-<div class="index">
-    
-    <br>
-    {% if user.is_authenticated and request.path == "/blog/" %}
+<body>
+    <div class="container">
+        <div class="index">
 
-        <h1> Welcome back, {{ user.get_username }} </h1>
+            <br>
+            {% if user.is_authenticated and request.path == "/blog/" %}
 
-    {% elif "search" in request.path %}
+            <h1> Welcome back, {{ user.get_username }} </h1>
 
-        <h1> {{ search }} </h1>
+            {% elif "search" in request.path %}
 
-    {% else %}
+            <h1> {{ search }} </h1>
 
-        <h1> Welcome to my blog </h1>
+            {% else %}
 
-    {% endif %}
+            <h1> Welcome to my blog </h1>
+
+            {% endif %}
 
 
-</div>
+        </div>
 
-{% if latest_post_list %}
-<ul>
-    {% for post in latest_post_list %}
-        <li><a href="{% url 'blog:post_details' post.id %}">{{ post.title }}</a>
-             - <a href="{% url 'blog:search' post.category.name %}">{{post.category}}</a>
-             - <a href="{% url 'blog:search' post.owner %}">{{post.owner}}</a>
-             - <a href="{% url 'blog:search' post.get_pub_date_no_hours %}">{{post.get_pub_date_no_hours}}</a>
-             {% if user.get_username == post.owner|stringformat:"s" %}
-             <sub><a href="{% url 'blog:update_post' post.id %}"> (edit)</a></sub>
-             <sub><a href="{% url 'blog:delete_post' post.id %}"> (delete)</a></sub></li>
-             {% endif %}
-    {% endfor %}
-    {% if user.is_authenticated %}
-    <li><a href="{% url 'blog:new_post' %}">Create new post</a></li>
-    {% endif %}
-</ul>
-{% else %}
-    {% if user.is_authenticated %}
+        {% if latest_post_list %}
+        <ul>
+            {% for post in latest_post_list %}
+            <li><a href="{% url 'blog:post_details' post.id %}">{{ post.title }}</a>
+                - <a href="{% url 'blog:search' post.category.name %}">{{post.category}}</a>
+                - <a href="{% url 'blog:search' post.owner %}">{{post.owner}}</a>
+                - <a href="{% url 'blog:search' post.get_pub_date_no_hours %}">{{post.get_pub_date_no_hours}}</a>
+                {% if user.get_username == post.owner|stringformat:"s" %}
+                <sub><a href="{% url 'blog:update_post' post.id %}"> (edit)</a></sub>
+                <sub><a href="{% url 'blog:delete_post' post.id %}"> (delete)</a></sub>
+            
+            {% endif %}
+            {% endfor %}
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'blog:new_post' %}">Create new post</a></li>
+            {% endif %}
+        </ul>
+        {% else %}
+        {% if user.is_authenticated %}
         <p> No posts are available. <a href="{% url 'blog:new_post' %}">Create one?</a></p>
-    {% else %}    
+        {% else %}
         <p> No posts are available.</p>
-    {% endif %}
-{% endif %}
+        {% endif %}
+        {% endif %}
 
-{% if request.path != "/blog/" %}
+        {% if request.path != "/blog/" %}
 
-    <a href="/blog/" class="btn btn-success">Back</a>
+        <a href="/blog/" class="btn btn-success">Back</a>
+
+    </div>
+</body>
 
 {% endif %}
 

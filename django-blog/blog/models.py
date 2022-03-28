@@ -4,7 +4,11 @@ from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 
+from django.contrib.auth.validators import UnicodeUsernameValidator
+
 from ckeditor.fields import RichTextField
+
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -71,8 +75,8 @@ class Comment(models.Model):
         return self.body
 
     def get_details(self):
-        return f"Commented by {self.name} on {self.get_pub_date()}"
-
+        return f"Commented by {self.name} on {self.get_pub_date()}"    
+           
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -56,6 +56,10 @@ img {
   text-align: center
 }
 
+.form-signin input[type="password"] {
+  margin-bottom: 0px
+}
+
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;

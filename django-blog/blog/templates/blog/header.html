@@ -24,7 +24,7 @@
   <!--header of login-->
   {% if request.path == the_url %}
   <link rel='stylesheet' href="{% static 'css/signin.css' %}">
-  {% endif %}
+  {% else %}
 </head>
 
 <!-- Header bar -->
@@ -107,3 +107,4 @@
     </div>
   </nav>
 </body>
+{% endif %}

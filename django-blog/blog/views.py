@@ -36,13 +36,15 @@ class SearchIndexView(View):
 
     def get(self, request, search):
 
+        categories = Category.objects.all()
+
         if Post.objects.filter(category__name=search):
             latest_post_list = Post.objects.filter(category__name=search).order_by('-pub_date')
         elif Post.objects.filter(owner__username=search):
             latest_post_list = Post.objects.filter(owner__username=search).order_by('-pub_date')
         else:
             latest_post_list = [post for post in Post.objects.all() if post.get_pub_date_no_hours() == search]
-        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'search' : search})
+        return render(request, 'blog/index.html', {'latest_post_list' : latest_post_list, 'search' : search, 'categories' : categories})
 
 class CreateCategory(CreateView):
 

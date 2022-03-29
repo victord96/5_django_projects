@@ -1,4 +1,5 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetConfirmView
+from django.contrib.auth.forms import SetPasswordForm
 from django.http import HttpResponseRedirect
 from blog.forms import LoginForm
 from django.contrib.auth.signals import user_logged_in
@@ -33,3 +34,6 @@ class CustomLoginView(LoginView):
             self.request.session.modified = True
 
         return HttpResponseRedirect(self.get_success_url()) 
+
+class CustomPasswordResetView(PasswordResetConfirmView):
+    form_class = SetPasswordForm

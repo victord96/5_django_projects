@@ -1,6 +1,6 @@
 # My blog
 
-My blog is a custom django blog app
+My blog is a Blog application with Django that allows users to create, edit, and delete posts. The homepage list all blog posts, and there is a dedicated detail page for each individual post.
 
 ## Installation
 

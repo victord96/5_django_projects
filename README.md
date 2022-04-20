@@ -6,7 +6,7 @@ My blog is a Blog application with Django that allows users to create, edit, and
 
 1. Merge project
 
-2. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install
+2. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install custom packages
 
 ```bash
 pip install -r /path/to/requirements.txt

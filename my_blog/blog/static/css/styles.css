@@ -1,0 +1,16 @@
+.space { margin-top: 20px; }
+
+.mini-space { margin-top: 10px;}
+
+a { text-decoration: none;
+color:rgb(12, 155, 212)}
+
+a:hover{ color: #022013}
+
+.btn-success { background-color: #393d3b }
+
+.btn-success:hover { background-color: #022013;
+}
+
+.post-upper { display:flex; justify-content: space-between;}
+

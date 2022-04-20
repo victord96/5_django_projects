@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+
+  <!-- Title of the site -->
+  {% block title %}
+    <title>My blog</title>
+  {% endblock %} 
+
+  <!-- header and upper bar -->
+  {% include "blog/header.html" %}
+
+  <!-- body -->
+  {% block content %}{% endblock %}
+  
+</html>

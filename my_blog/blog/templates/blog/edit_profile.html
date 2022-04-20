@@ -1,0 +1,46 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <form method="post" enctype="multipart/form-data" formnovalidate>{% csrf_token %} 
+        <div class="row">
+            <div class="col">
+                {{userform.username.label_tag}}
+                <div class="mini-space"></div>
+                {{userform.username}}
+            </div>
+            <div class="col">
+                {{userform.first_name.label_tag}}
+                <div class="mini-space"></div>
+                {{userform.first_name}}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                {{userform.last_name.label_tag}}
+                <div class="mini-space"></div>
+                {{userform.last_name}}
+            </div>
+            <div class="col">
+                {{userform.email.label_tag}}
+                <div class="mini-space"></div>
+                {{userform.email}}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                {{profileform.bio.label_tag}}
+                <div class="mini-space"></div>
+                {{profileform.bio}}
+            </div>
+        </div> 
+        <br>
+        <input class="btn btn-success" type="submit" value="Save">
+        <input class="btn btn-success" type="button" onclick="history.back();" value="Back">
+        <input type="hidden">
+    </form>
+</div>    
+{% endblock %}

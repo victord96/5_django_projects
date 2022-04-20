@@ -12,8 +12,6 @@ from django.urls import path, reverse_lazy, resolve
 from .models import Category, Post, Comment, Profile
 from .forms import CommentForm, PostForm, ProfileForm, UserForm
 
-from slugify import slugify
-
 
 class IndexView(View):
 

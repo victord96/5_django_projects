@@ -3,12 +3,11 @@ from django.forms import ModelForm
 from .models import Post, Comment, Profile
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm, UsernameField
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field, Div, HTML, Fieldset
+from crispy_forms.layout import Submit, Layout, Div, HTML
 from crispy_bootstrap5.bootstrap5 import FloatingField
-from crispy_forms.bootstrap import InlineCheckboxes, Container
 from django.utils.translation import gettext_lazy as _
 
 # Customized authentication form that separates username and password validation
@@ -22,7 +21,6 @@ class CustomAuthenticationForm(AuthenticationForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-
         if username is not None:
             validate_user = self.check_user(username=username)
             if validate_user is None:
@@ -42,11 +40,13 @@ class CustomAuthenticationForm(AuthenticationForm):
 
     def check_user(self, username):
         if User.objects.filter(username=username):
-            return username
+            
+            return username   
         return None
 
     def check_pass(self, password):
         # breakpoint()
+       
         users = User.objects.all()
         for user in users:
             if user.check_password(password):
@@ -54,8 +54,8 @@ class CustomAuthenticationForm(AuthenticationForm):
         return None
 
     def get_invalid_user_error(self):
+        
         return ValidationError(
-            # ahi que acceder al mensaje de error de alguna forma
             self.error_messages['invalid_login'],
             code='invalid_login',
         )
@@ -69,18 +69,19 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 # Login form
 class LoginForm(CustomAuthenticationForm):
+    # LoginForm for django crispy forms
 
     remember_me = forms.BooleanField(required=None)
 
     def __init__(self, *args, **kwargs):
+        
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = "id-authenticationForm"
-        self.helper.form_class = "form-signin"
+        self.helper.form_class = "form-signin container"
         self.helper.form_method = "post"
         self.helper.form_action = "login"
         self.helper.layout = Layout(
-
 
             Div( HTML("""{% load static %}<img class="mb-4" src="{% static 'images/logo.jpg' %}" >
                         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>"""),
@@ -91,17 +92,46 @@ class LoginForm(CustomAuthenticationForm):
                 Div(
                     Div("remember_me", css_class="checkbox mb-3"), css_class="col"),
                 Div(HTML(
-                    "<p><a href='{% url 'password_reset' %}'>Lost password?</a></p>"), css_class="col"),
+                    "<p><a href='../password_reset'>Lost password?</a></p>"), css_class="col", id="lost_password"
+                    ),
                 css_class="row"
             ),
 
-            Submit('submit', 'Sign in', css_class="w-100 btn btn-lg btn-primary"),
+            Submit('login', 'Sign in', css_class="w-100 btn btn-lg btn-primary"),
 
-            HTML("""<p class="mt-5 mb-3 text-muted">&copy; 2022 all rights deserved</p>"""), css_class="container"
-            )
-        )
+            HTML("""<p class="mt-5 mb-3 text-muted">&copy; 2022 all rights deserved</p>""")
+            ),
+            
+            HTML("""<script>
+            $( "#lost_password" ).click(function() {
+            $( "#id-authenticationForm" ).animate({right: '1000px'});
+            
+            $( "#id-PasswordResetForm" ).delay(500).fadeIn();
+            });
+            </script>"""))
 
         # self.helper.add_input(Submit('submit','Login'))
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    # PasswordResetForm for django crispy forms
+     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = "id-PasswordResetForm"
+        self.helper.form_class = "form-signin container"
+        self.helper.form_method = "post"
+        self.helper.form_action = "password_reset"
+        self.helper.layout = Layout(
+
+            HTML("""<script>
+            $("#id-PasswordResetForm").hide();
+            </script>
+            <h1 class="h3 mb-3 fw-normal">Password recovery</h1>"""),
+
+            FloatingField("email"),
+
+            Submit('login', 'Send email', css_class="w-100 btn btn-lg btn-primary"))
 
 
 class UserForm(ModelForm):

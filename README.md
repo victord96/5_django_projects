@@ -12,14 +12,14 @@ My blog is a Blog application with Django that allows users to create, edit, and
 cd my_blog
 pip install -r requirements.txt
 py manage.py migrate 
+py manage.py runserver
 ```
+Then go to browser and search for /blog
 
 ## Description
 
-My blog is a django bog that allows you to create, manage and filter your own posts.
+My blog is a django blog that allows you to create, manage and filter your own posts.
 It also has a profile manager inherited from django's default authentication system.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.

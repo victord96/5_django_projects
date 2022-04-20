@@ -9,7 +9,9 @@ My blog is a Blog application with Django that allows users to create, edit, and
 2. Use the package manager [pip](https://pip.pypa.io/en/stable/) to install custom packages
 
 ```bash
-pip install -r /path/to/requirements.txt
+cd my_blog
+pip install -r requirements.txt
+py manage.py migrate 
 ```
 
 ## Description

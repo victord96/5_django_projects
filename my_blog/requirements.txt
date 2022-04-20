@@ -3,3 +3,4 @@ Django==4.0.4
 django_ckeditor==6.4.0
 django_crispy_forms==1.14.0
 unicode_slugify==0.1.5
+Pillow==9.1.0
